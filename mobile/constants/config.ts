@@ -1,15 +1,25 @@
 import Constants from 'expo-constants';
+import { Platform } from 'react-native';
 
 // We can define variables from appconfig extra, or fall back to development defaults.
 const extra = Constants.expoConfig?.extra || {};
 
+const getApiBaseUrl = () => {
+  if (process.env.EXPO_PUBLIC_API_BASE_URL) return process.env.EXPO_PUBLIC_API_BASE_URL;
+  if (process.env.API_BASE_URL) return process.env.API_BASE_URL;
+  if (extra.apiBaseUrl) return extra.apiBaseUrl as string;
+  
+  if (Platform.OS === 'web' && typeof window !== 'undefined' && window.location) {
+    return `${window.location.origin}/api`;
+  }
+  
+  // Default fallback for mobile simulators/devices
+  return 'https://aqtradeai.example.com/api';
+};
+
 export const APP_CONFIG = {
   // Base API for AQ Trade AI Secure Integration
-  API_BASE_URL: 
-    process.env.EXPO_PUBLIC_API_BASE_URL || 
-    process.env.API_BASE_URL || 
-    (extra.apiBaseUrl as string) || 
-    'https://aqtradeai.example.com/api',
+  API_BASE_URL: getApiBaseUrl(),
   
   // Timeout for API requests in ms
   API_TIMEOUT: 15000,

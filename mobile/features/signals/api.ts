@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiService, GuardianStatus, UserPreferences } from '../../services/apiService';
+import { apiService, GuardianStatus, UserPreferences, AssetAnalysis } from '../../services/apiService';
 import { useSignalStore, Signal } from '../../store/signalStore';
 
 /**
@@ -92,6 +92,15 @@ export function useFetchUserPreferences() {
     queryKey: ['user-preferences'],
     queryFn: apiService.getUserPreferences,
     staleTime: 120000, // 2 minutes
+  });
+}
+
+// Fetches technical analysis details for a symbol
+export function useFetchAnalysis(symbol: string) {
+  return useQuery<AssetAnalysis, Error>({
+    queryKey: ['analysis', symbol],
+    queryFn: () => apiService.getAnalysisBySymbol(symbol),
+    staleTime: 60000, // 1 minute
   });
 }
 

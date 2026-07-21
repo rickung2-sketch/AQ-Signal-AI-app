@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, ScrollView, TouchableOpacity, RefreshControl, Platform } from 'react-native';
+import { useFetchAnalysis } from '../../features/signals/api';
 import { colors } from '../../theme/colors';
 import { spacing, borderRadius } from '../../theme/spacing';
 import { Card } from '../../components/Card';
@@ -32,11 +33,17 @@ export default function AnalysisScreen() {
   const [selectedAsset, setSelectedAsset] = useState<'XAU/USD' | 'BTC/USD' | 'EUR/USD'>('XAU/USD');
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const handleRefresh = () => {
+  const { data: serverData, refetch } = useFetchAnalysis(selectedAsset);
+
+  const handleRefresh = async () => {
     setIsRefreshing(true);
-    setTimeout(() => {
+    try {
+      await refetch();
+    } catch (e) {
+      console.warn('Silent refresh fallback triggered');
+    } finally {
       setIsRefreshing(false);
-    }, 1000);
+    }
   };
 
   const assetMetrics: Record<'XAU/USD' | 'BTC/USD' | 'EUR/USD', {
@@ -135,7 +142,7 @@ export default function AnalysisScreen() {
     }
   };
 
-  const currentData = assetMetrics[selectedAsset];
+  const currentData = serverData || assetMetrics[selectedAsset];
 
   return (
     <View style={styles.container}>
