@@ -1,0 +1,6 @@
+{
+  "name": "AQ Trade AI",
+  "description": "A premium black and gold trading dashboard upgraded to Release Candidate 5 (RC5), featuring an executive Release Readiness Center for Version 1.0, Live Validation Campaign tracking, Twelve Data Forex and Gold Provider, a 12-Stage Engine Integration Layer, and complete multi-timeframe validation protocols.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
